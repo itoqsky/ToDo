@@ -1,19 +1,19 @@
-import React from 'react';
-import { db } from '../firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import React from "react";
+import { db } from "../firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 export default function AddTodo() {
-  const [title, setTitle] = React.useState('');
+  const [title, setTitle] = React.useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (title !== '') {
-      await addDoc(collection(db, 'todos'), {
+    if (title !== "") {
+      await addDoc(collection(db, "todos"), {
         title,
-        completed: false
+        completed: false,
       });
-      setTitle('');
+      setTitle("");
     }
   };
   return (
