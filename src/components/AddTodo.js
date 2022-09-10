@@ -2,7 +2,7 @@ import React from "react";
 import { db } from "../firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-export default function AddTodo() {
+export default function AddTodo(props) {
   const [title, setTitle] = React.useState("");
 
   const handleSubmit = async (e) => {
@@ -12,6 +12,7 @@ export default function AddTodo() {
       await addDoc(collection(db, "todos"), {
         title,
         completed: false,
+        owner: props.listId,
       });
       setTitle("");
     }

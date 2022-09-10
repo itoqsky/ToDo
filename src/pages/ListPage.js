@@ -42,19 +42,7 @@ function ListPage() {
       </div>
       <div className="todo_container">
         {lists.map((list) => (
-          // <ToDo
-          //   key={todo.id}
-          //   todo={todo}
-          //   toggleComplete={toggleComplete}
-          //   handleDelete={handleDelete}
-          //   handleEdit={handleEdit}
-          // />
-          <List
-            key={list.id}
-            list={list}
-            // toggleComplete={toggleComplete}
-            handleDelete={handleDelete}
-          />
+          <List key={list.id} list={list} handleDelete={handleDelete} />
         ))}
       </div>
     </div>

@@ -1,8 +1,12 @@
 import "../App.css";
 import React from "react";
 import Title from "../components/Title";
-import Add from "../components/Add";
+import AddTodo from "../components/AddTodo";
 import ToDo from "../components/ToDo";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { useNavigate } from "react-router-dom";
+import { db } from "../firebase";
+import { useSearchParams } from "react-router-dom";
 import {
   collection,
   query,
@@ -10,14 +14,19 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  where,
 } from "firebase/firestore";
-import { db } from "../firebase";
 
 function TodoPage() {
-  const [todos, setTodos] = React.useState([]);
+  const [searchParams] = useSearchParams();
+  const listId = searchParams.get("listId");
 
-  React.useEffect(() => {
-    const q = query(collection(db, "todos"));
+  const navigate = useNavigate();
+
+  const [todos, setTodos] = React.useState([]);
+  const handleSetTodos = async () => {
+    const todosref = collection(db, "todos");
+    const q = await query(todosref, where("owner", "==", listId));
     const unsub = onSnapshot(q, (querySnapshot) => {
       let todosArray = [];
       querySnapshot.forEach((doc) => {
@@ -25,12 +34,13 @@ function TodoPage() {
       });
       setTodos(todosArray);
     });
-    return () => unsub();
+    return unsub;
+  };
+
+  React.useEffect(() => {
+    return () => handleSetTodos();
   }, []);
 
-  const handleEdit = async (todo, title) => {
-    await updateDoc(doc(db, "todos", todo.id), { title: title });
-  };
   const toggleComplete = async (todo) => {
     await updateDoc(doc(db, "todos", todo.id), { completed: !todo.completed });
   };
@@ -38,12 +48,12 @@ function TodoPage() {
     await deleteDoc(doc(db, "todos", id));
   };
   return (
-    <div className="App">
+    <div className="TodoPage">
       <div>
         <Title />
       </div>
       <div>
-        <Add />
+        <AddTodo listId={listId} />
       </div>
       <div className="todo_container">
         {todos.map((todo) => (
@@ -52,10 +62,16 @@ function TodoPage() {
             todo={todo}
             toggleComplete={toggleComplete}
             handleDelete={handleDelete}
-            handleEdit={handleEdit}
           />
         ))}
       </div>
+      <button
+        onClick={() => {
+          navigate("/");
+        }}
+      >
+        <CancelIcon id="i" />
+      </button>
     </div>
   );
 }

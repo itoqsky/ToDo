@@ -1,15 +1,17 @@
 import React from "react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { db } from "../firebase";
 
-export default function Todo({
-  todo,
-  toggleComplete,
-  handleDelete,
-  handleEdit,
-}) {
+import { doc, updateDoc } from "firebase/firestore";
+
+export default function Todo({ todo, toggleComplete, handleDelete }) {
   const [newTitle, setNewTitle] = React.useState(todo.title);
+
+  const handleEdit = async (todo, title) => {
+    await updateDoc(doc(db, "todos", todo.id), { title: title });
+  };
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ export default function Todo({
       <input
         style={{ textDecoration: todo.completed && "line-through" }}
         type="text"
-        value={todo.title === "" ? newTitle : todo.title}
+        value={newTitle}
         className="list"
         onChange={handleChange}
       />
