@@ -21,12 +21,7 @@
         "react",
         "@typescript-eslint"
     ],
-    // "prettier/prettier": [
-    //     "error",
-    //     {
-    //       "endOfLine": "auto"
-    //     }
-    //   ],
+    
     "rules": {
         "react/react-in-jsx-scope": "off",
         "react/prop-types": "off"
